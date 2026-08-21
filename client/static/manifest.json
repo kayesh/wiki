@@ -1,7 +1,10 @@
 {
   "name": "Sunni Noor",
   "short_name": "Sunni Noor",
+  "id": "/pwa/sunni-noor",
   "start_url": "/",
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
       {
           "src": "/_assets/favicons/android-chrome-192x192.png",

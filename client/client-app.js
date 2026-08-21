@@ -165,6 +165,11 @@ if (!window.__wikiPwaInstallCaptureReady) {
   window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault()
     window.__wikiDeferredInstallPrompt = event
+    try {
+      window.localStorage.removeItem('wiki-pwa-installed')
+    } catch (err) {
+      // ignore storage failures
+    }
     window.dispatchEvent(new Event('wiki-pwa-install-ready'))
   })
 }
