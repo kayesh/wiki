@@ -30,6 +30,9 @@ describe('helpers/pwa/getWebAppManifest', () => {
 
     expect(manifest.name).toBe('Sunni Noor')
     expect(manifest.short_name).toBe('Sunni Noor')
+    expect(manifest.lang).toBe('en')
+    expect(manifest.id).toBe('/pwa/sunni-noor')
+    expect(manifest.id).not.toBe('/')
   })
 
   it('keeps Latin PWA app name when admin site title is customized', () => {

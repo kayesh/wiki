@@ -25,9 +25,13 @@ function getWebAppManifest () {
   return {
     name: appName,
     short_name: appName,
-    id: '/',
+    // Distinct from the site origin (`/`). Using `/` made Chrome treat the PWA as
+    // the website itself and show the HTML title / og:site_name (সুন্নি নূর).
+    id: '/pwa/sunni-noor',
     start_url: '/',
     scope: '/',
+    lang: 'en',
+    dir: 'ltr',
     icons: [
       {
         src: '/_assets/favicons/android-chrome-192x192.png',

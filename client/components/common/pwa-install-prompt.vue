@@ -21,6 +21,7 @@ import { get } from 'vuex-pathify'
 const PWA_INSTALL_SESSION_DISMISSED_KEY = 'wiki-pwa-install-session-dismissed'
 const PWA_INSTALL_NEVER_KEY = 'wiki-pwa-install-never'
 const PWA_INSTALL_INSTALLED_KEY = 'wiki-pwa-installed'
+const PWA_INSTALL_APP_NAME_FALLBACK = 'Sunni Noor'
 
 export default {
   data () {
@@ -33,7 +34,14 @@ export default {
   computed: {
     printView: get('site/printView'),
     mode: get('page/mode'),
-    appName: get('site/pwaAppName')
+    pwaAppNameFromStore: get('site/pwaAppName'),
+    appName () {
+      const fromStore = this.pwaAppNameFromStore
+      if (typeof fromStore === 'string' && fromStore.trim()) {
+        return fromStore
+      }
+      return PWA_INSTALL_APP_NAME_FALLBACK
+    }
   },
   watch: {
     printView () {
@@ -59,7 +67,10 @@ export default {
       if (this.printView) { return false }
       if (this.mode === 'edit') { return false }
       if (this.isStandalone()) { return false }
-      if (this.isAlreadyInstalled()) { return false }
+      // beforeinstallprompt only fires when Chrome considers the app installable,
+      // which means it is not currently installed. Do not block on localStorage:
+      // that flag survives uninstall and hides the prompt until cookies are cleared.
+      if (!this.deferredPrompt && this.isAlreadyInstalled()) { return false }
       if (this.isNeverDismissed()) { return false }
       if (this.isSessionDismissed()) { return false }
       if (this.dismissedThisLoad) { return false }
@@ -78,6 +89,13 @@ export default {
     markInstalled () {
       try {
         window.localStorage.setItem(PWA_INSTALL_INSTALLED_KEY, '1')
+      } catch (err) {
+        // ignore storage failures
+      }
+    },
+    clearInstalledFlag () {
+      try {
+        window.localStorage.removeItem(PWA_INSTALL_INSTALLED_KEY)
       } catch (err) {
         // ignore storage failures
       }
@@ -122,6 +140,7 @@ export default {
     syncDeferredPrompt () {
       if (window.__wikiDeferredInstallPrompt) {
         this.deferredPrompt = window.__wikiDeferredInstallPrompt
+        this.clearInstalledFlag()
         this.$nextTick(() => {
           this.tryOpenSheet()
         })
@@ -130,6 +149,7 @@ export default {
     storeDeferredPrompt (event) {
       window.__wikiDeferredInstallPrompt = event
       this.deferredPrompt = event
+      this.clearInstalledFlag()
       this.tryOpenSheet()
     },
     onBeforeInstallPrompt (event) {
