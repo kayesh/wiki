@@ -1967,10 +1967,10 @@
   resolved "https://registry.npmjs.org/@log4js-node/log4js-api/-/log4js-api-1.0.2.tgz"
   integrity sha512-6SJfx949YEWooh/CUPpJ+F491y4BYJmknz4hUN1+RHvKoUEynKbRmhnwbk/VLmh4OthLLDNCyWXfbh4DG1cTXA==
 
-"@mdi/font@5.8.55":
-  version "5.8.55"
-  resolved "https://registry.npmjs.org/@mdi/font/-/font-5.8.55.tgz"
-  integrity sha512-8mrwfFBsmj+D67ZiGQSe5TU/lcWCtDyli2eshQ2fvLCZGRPqFMM23YQp4+JMOTpk5yMZKTeAwNWIYfITy76OHA==
+"@mdi/font@7.4.47":
+  version "7.4.47"
+  resolved "https://registry.npmjs.org/@mdi/font/-/font-7.4.47.tgz"
+  integrity sha512-43MtGpd585SNzHZPcYowu/84Vz2a2g31TvPMTm9uTiCSWzaheQySUcSyUH/46fPnuPQWof2yd0pGBtzee/IQWw==
 
 "@mixmark-io/domino@^2.2.0":
   version "2.2.0"
