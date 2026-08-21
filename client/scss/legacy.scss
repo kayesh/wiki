@@ -373,4 +373,17 @@ body {
 .contents {
   flex-grow: 1;
   padding: 24px !important;
+
+  .boxIcon .mdi,
+  .accordion > .mdi {
+    font-family: 'Material Design Icons', sans-serif !important;
+    font-style: normal;
+    font-weight: normal;
+    font-feature-settings: 'liga';
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+  }
 }
