@@ -212,7 +212,7 @@ const PROVIDER_ORDER = {
 }
 
 function sortProviders (providers) {
-  return [...(providers || [])].sort((a, b) => (PROVIDER_ORDER[a.key] ?? 100) - (PROVIDER_ORDER[b.key] ?? 100))
+  return [...(providers || [])].sort((a, b) => _.get(PROVIDER_ORDER, a.key, 100) - _.get(PROVIDER_ORDER, b.key, 100))
 }
 
 /* global WIKI */

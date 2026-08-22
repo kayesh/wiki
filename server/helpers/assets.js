@@ -295,7 +295,7 @@ function getProviders () {
         return 100
       }
     })
-  })), provider => MODULE_ORDER[provider.key] ?? 100)
+  })), provider => _.get(MODULE_ORDER, provider.key, 100))
 }
 
 function applyProviders (providers) {
