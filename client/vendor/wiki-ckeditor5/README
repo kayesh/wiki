@@ -1,0 +1,8 @@
+# Vendored @requarks/ckeditor5 build (19.0.1-wiki.3 + Citation plugin)
+
+Rebuild from the sibling wiki-ckeditor5 repo:
+
+    cd ../wiki-ckeditor5 && npm install && NODE_OPTIONS=--openssl-legacy-provider npm run build
+    cp build/ckeditor.js build/ckeditor.js.map ../wiki/client/vendor/wiki-ckeditor5/
+
+Source: https://github.com/Requarks/wiki-ckeditor5

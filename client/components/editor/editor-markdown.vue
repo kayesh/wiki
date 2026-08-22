@@ -73,6 +73,11 @@
                 v-icon(color='error') mdi-alpha-e-box-outline
               v-list-item-title {{$t('editor:markup.blockquoteError')}}
             v-divider
+            v-list-item(@click='insertCitation()')
+              v-list-item-action
+                v-icon(color='blue-grey lighten-3') mdi-note-outline
+              v-list-item-title {{$t('editor:markup.citation')}}
+            v-divider
         v-tooltip(bottom, color='primary')
           template(v-slot:activator='{ on }')
             v-btn.animated.fadeIn.wait-p7s(icon, tile, v-on='on', @click='insertBeforeEachLine({ content: `- `})').mx-0
@@ -554,6 +559,35 @@ export default {
         const lastLine = _.last(lines)
         this.cm.doc.replaceRange(`\n${after}\n`, { line: lastLine, ch: this.cm.doc.getLine(lastLine).length + 1 })
       }
+    },
+    insertCitation() {
+      let lines = []
+      if (!this.cm.doc.somethingSelected()) {
+        lines.push(this.cm.doc.getCursor('head').line)
+      } else {
+        lines = _.flatten(this.cm.doc.listSelections().map(sl => {
+          const range = Math.abs(sl.anchor.line - sl.head.line) + 1
+          const lowestLine = (sl.anchor.line > sl.head.line) ? sl.head.line : sl.anchor.line
+          return _.times(range, l => l + lowestLine)
+        }))
+      }
+      const lastLine = _.last(lines)
+      const lineContent = this.cm.doc.getLine(lastLine)
+
+      if (!lineContent.trim()) {
+        const placeholder = 'Citation text'
+        this.cm.doc.replaceRange(placeholder, { line: lastLine, ch: 0 })
+        this.cm.doc.replaceRange('\n{.citation}\n', { line: lastLine, ch: placeholder.length })
+        this.cm.doc.setSelection({ line: lastLine, ch: 0 }, { line: lastLine, ch: placeholder.length })
+        return
+      }
+
+      const nextLineIdx = lastLine + 1
+      if (this.cm.doc.lineCount() > nextLineIdx && this.cm.doc.getLine(nextLineIdx).trim() === '{.citation}') {
+        return
+      }
+
+      this.cm.doc.replaceRange('\n{.citation}\n', { line: lastLine, ch: lineContent.length })
     },
     /**
      * Update scroll sync

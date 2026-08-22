@@ -17,8 +17,8 @@
 <script>
 import _ from 'lodash'
 import { get, sync } from 'vuex-pathify'
-import DecoupledEditor from '@requarks/ckeditor5'
-// import DecoupledEditor from '../../../../wiki-ckeditor5/build/ckeditor'
+// Vendored build with Citation plugin — rebuild from ../wiki-ckeditor5, copy to client/vendor/wiki-ckeditor5/
+import DecoupledEditor from '../../vendor/wiki-ckeditor5/ckeditor'
 import EditorConflict from './ckeditor/conflict.vue'
 import { html as beautify } from 'js-beautify/js/lib/beautifier.min.js'
 
@@ -186,6 +186,44 @@ $editor-height-mobile: calc(100vh - 56px - 16px);
       color: unset;
       padding: .15em;
     }
+
+    p.citation,
+    .citation {
+      background-color: #cedee7;
+      border-radius: 5px;
+      padding: 12px 16px 12px 32px;
+      display: block;
+      margin: 10px 0;
+      position: relative;
+      color: #3c567e;
+      font-weight: 200;
+      font-size: 0.875rem;
+      line-height: 1.5;
+
+      &::before {
+        content: '\F02FC';
+        font-family: 'Material Design Icons', sans-serif;
+        font-weight: 200;
+        font-size: 18px;
+        color: #3c567e;
+        position: absolute;
+        left: 4px;
+        top: 10px;
+      }
+
+      > p {
+        padding: 0;
+        margin: 0;
+        color: inherit;
+        font-weight: inherit;
+        font-size: inherit;
+        line-height: inherit;
+
+        &:not(:first-child) {
+          padding-top: 0.5rem;
+        }
+      }
+    }
   }
 
   .ck.ck-toolbar {
@@ -197,6 +235,74 @@ $editor-height-mobile: calc(100vh - 56px - 16px);
 
   .ck.ck-toolbar__items {
     justify-content: center;
+  }
+
+  .ck.ck-toolbar-dropdown.ck-wide-dropdown,
+  .ck.ck-toolbar-dropdown .ck-wide-dropdown,
+  .ck.ck-insert-elements-dropdown.ck-wide-dropdown {
+    .ck-dropdown__panel {
+      min-width: 240px;
+
+      .ck-dropdown,
+      .ck-splitbutton {
+        width: 100%;
+      }
+
+      .ck-dropdown > .ck-button.ck-dropdown__button {
+        width: 100%;
+        justify-content: flex-start;
+
+        .ck-dropdown__arrow {
+          margin-left: auto;
+
+          .ck-icon {
+            display: none;
+          }
+
+          &::before {
+            content: '>';
+            font-size: 14px;
+            line-height: 1;
+          }
+        }
+      }
+
+      .ck-splitbutton {
+        .ck-splitbutton__action {
+          flex: 1;
+          justify-content: flex-start;
+        }
+
+        .ck-splitbutton__arrow {
+          margin-left: auto;
+
+          .ck-icon {
+            display: none;
+          }
+
+          &::before {
+            content: '>';
+            font-size: 14px;
+            line-height: 1;
+          }
+        }
+      }
+    }
+
+    .ck-toolbar.ck-toolbar_vertical .ck-toolbar__items {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .ck-button.ck-button_with-text {
+      width: 100%;
+      justify-content: flex-start;
+
+      .ck-button__icon {
+        margin-left: 0;
+        margin-right: 12px;
+      }
+    }
   }
 
   > .ck-editor__editable {
