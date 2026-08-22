@@ -1,8 +1,8 @@
 <template lang='pug'>
   div
-    v-app-bar.nav-header(:color='navBarColor', dark, app, :clipped-left='!$vuetify.rtl', :clipped-right='$vuetify.rtl', fixed, flat)
+    v-app-bar.nav-header(:color='navBarColor', dark, app, :clipped-left='!$vuetify.rtl', :clipped-right='$vuetify.rtl', fixed, flat, :height='mobileViewport ? 56 : undefined')
       //- Mobile editor: title + save/page/close (upstream keeps actions slot on small screens)
-      v-toolbar.nav-header-mobile-editor(v-if='mobileViewport && isEditorHeader', :color='navBarColor', dark, flat)
+      div.nav-header-mobile-editor(v-if='mobileViewport && isEditorHeader')
         .nav-header-mobile-editor__mid
           slot(name='mid')
         .nav-header-mobile-editor__actions
@@ -11,7 +11,7 @@
           slot(name='actions')
 
       //- Mobile view: menu | search | chat (+ shared actions in bottom bar)
-      v-toolbar.nav-header-mobile(v-else-if='mobileViewport', :color='navBarColor', dark, flat)
+      div.nav-header-mobile(v-else-if='mobileViewport')
         nav-action-items(preset='mobile-top', layout='inline')
           template(#search)
             v-text-field.nav-header-mobile__search(
@@ -509,9 +509,20 @@ export default {
 
   @media #{map-get($display-breakpoints, 'sm-and-down')} {
     &.v-app-bar,
-    .nav-header-mobile.v-toolbar {
+    .nav-header-mobile {
       background-color: $nav-bar-color !important;
       transition: none !important;
+    }
+
+    &.v-app-bar {
+      height: 56px !important;
+
+      > .v-toolbar__content {
+        height: 56px !important;
+        min-height: 56px !important;
+        max-height: 56px !important;
+        padding: 0 !important;
+      }
     }
 
     > .v-toolbar__content {
@@ -531,7 +542,7 @@ export default {
 .theme--dark {
   @media #{map-get($display-breakpoints, 'sm-and-down')} {
     .nav-header.v-app-bar,
-    .nav-header .nav-header-mobile.v-toolbar {
+    .nav-header .nav-header-mobile {
       background-color: $nav-bar-color !important;
     }
   }
@@ -550,16 +561,11 @@ export default {
 
 .nav-header-mobile-editor {
   width: 100%;
-  padding: 0;
-
-  .v-toolbar__content {
-    padding: 0 8px !important;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 4px;
-  }
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 4px;
 
   &__mid {
     flex: 1 1 auto;
@@ -608,16 +614,11 @@ export default {
 
 .nav-header-mobile {
   width: 100%;
-  padding: 0;
-
-  .v-toolbar__content {
-    padding: 0 8px !important;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 8px;
-  }
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
 
   &__menu {
     flex-shrink: 0;
