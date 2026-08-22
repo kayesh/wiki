@@ -888,6 +888,12 @@ export default {
         return
       }
 
+      const scrollTop = this._mainScrollWrap.scrollTop
+      if (scrollTop <= 0) {
+        this.pageHeaderStuck = false
+        return
+      }
+
       const rootTop = this._mainScrollWrap.getBoundingClientRect().top
       const sentinelBottom = sentinel.getBoundingClientRect().bottom
 
@@ -898,7 +904,10 @@ export default {
         return
       }
 
-      if (sentinelBottom > rootTop + PAGE_HEADER_STUCK_HYSTERESIS_PX) {
+      // Unstick as soon as the sentinel re-enters the scrollport. The sentinel is
+      // only 1px tall, so requiring bottom > rootTop + hysteresis can never fire
+      // while the header is still stuck at the top edge.
+      if (sentinelBottom > rootTop) {
         this.pageHeaderStuck = false
       }
     },
