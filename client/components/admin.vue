@@ -38,6 +38,7 @@ const router = new VueRouter({
     { path: '/', redirect: '/dashboard' },
     { path: '/dashboard', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-dashboard.vue') },
     { path: '/general', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-general.vue') },
+    { path: '/asset-customization', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-asset-customization.vue') },
     { path: '/locale', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-locale.vue') },
     { path: '/navigation', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-navigation.vue') },
     { path: '/pages', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-pages.vue') },

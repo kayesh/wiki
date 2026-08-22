@@ -46,6 +46,29 @@ defaults:
     contentLicense: ''
     footerOverride: ''
     logoUrl: https://static.requarks.io/logo/wikijs-butterfly.svg
+    assets:
+      logo:
+        isEnabled: true
+        siteLogo: https://static.requarks.io/logo/wikijs-butterfly.svg
+      favicons:
+        isEnabled: true
+        appleTouchIcon: /_assets/favicons/apple-touch-icon.png
+        androidChrome192: /_assets/favicons/android-chrome-192x192.png
+        androidChrome256: /_assets/favicons/android-chrome-256x256.png
+        favicon32: /_assets/favicons/favicon-32x32.png
+        favicon16: /_assets/favicons/favicon-16x16.png
+        safariPinnedTab: /_assets/favicons/safari-pinned-tab.svg
+        mstile150: /_assets/favicons/mstile-150x150.png
+        faviconIco: /_assets/favicon.ico
+      backgrounds:
+        isEnabled: true
+        login: /_assets/img/splash/1.jpg
+      openGraph:
+        isEnabled: true
+        image: ''
+      customFonts:
+        isEnabled: true
+        fonts: []
     pageExtensions:
       - md
       - html

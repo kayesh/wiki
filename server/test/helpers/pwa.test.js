@@ -44,6 +44,20 @@ describe('helpers/pwa/getWebAppManifest', () => {
     expect(manifest.short_name).toBe('Sunni Noor')
   })
 
+  it('uses customized PWA icon paths from asset config', () => {
+    WIKI.config.assets = {
+      favicons: {
+        isEnabled: true,
+        androidChrome192: '/uploads/pwa-192.png',
+        androidChrome256: '/uploads/pwa-256.png'
+      }
+    }
+
+    const manifest = getWebAppManifest()
+    expect(manifest.icons[0].src).toBe('/uploads/pwa-192.png')
+    expect(manifest.icons[1].src).toBe('/uploads/pwa-256.png')
+  })
+
   it('does not use Bengali site display name in manifest', () => {
     const manifest = getWebAppManifest()
     const siteName = getSiteDisplayName()

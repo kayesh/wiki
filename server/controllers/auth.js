@@ -7,6 +7,7 @@ const router = express.Router()
 const _ = require('lodash')
 const commonHelper = require('../helpers/common')
 const logoutRedirect = require('../helpers/logoutRedirect')
+const { getResolvedAssets } = require('../helpers/assets')
 
 const bruteforce = new ExpressBrute(new BruteKnex({
   createTable: true,
@@ -43,7 +44,7 @@ router.get('/login', async (req, res, next) => {
       }
     }
     // -> Show Login
-    const bgUrl = !_.isEmpty(WIKI.config.auth.loginBgUrl) ? WIKI.config.auth.loginBgUrl : '/_assets/img/splash/1.jpg'
+    const bgUrl = getResolvedAssets().loginBackground
     res.render('login', { bgUrl, hideLocal: WIKI.config.auth.hideLocal })
   }
 })
@@ -188,7 +189,7 @@ router.get('/login-reset/:token', bruteforce.prevent, async (req, res, next) => 
       userId: usr.id,
       kind: 'changePwd'
     })
-    const bgUrl = !_.isEmpty(WIKI.config.auth.loginBgUrl) ? WIKI.config.auth.loginBgUrl : '/_assets/img/splash/1.jpg'
+    const bgUrl = getResolvedAssets().loginBackground
     res.render('login', { bgUrl, hideLocal: WIKI.config.auth.hideLocal, changePwdContinuationToken })
   } catch (err) {
     next(err)

@@ -8,15 +8,6 @@ query {
       injectCSS
       injectHead
       injectBody
-      customFonts {
-        id
-        family
-        filename
-        format
-        weight
-        style
-        unicodeRange
-      }
     }
   }
 }

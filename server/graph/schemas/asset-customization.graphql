@@ -1,0 +1,69 @@
+# ===============================================
+# ASSET CUSTOMIZATION
+# ===============================================
+
+extend type Query {
+  assetCustomization: AssetCustomizationQuery
+}
+
+extend type Mutation {
+  assetCustomization: AssetCustomizationMutation
+}
+
+# -----------------------------------------------
+# QUERIES
+# -----------------------------------------------
+
+type AssetCustomizationQuery {
+  providers: [AssetCustomizationProvider] @auth(requires: ["manage:system"])
+}
+
+# -----------------------------------------------
+# MUTATIONS
+# -----------------------------------------------
+
+type AssetCustomizationMutation {
+  updateProviders(
+    providers: [AssetCustomizationProviderInput]!
+  ): AssetCustomizationUpdateResponse @auth(requires: ["manage:system"])
+}
+
+# -----------------------------------------------
+# TYPES
+# -----------------------------------------------
+
+type AssetCustomizationProvider {
+  isEnabled: Boolean!
+  key: String!
+  title: String!
+  description: String
+  isAvailable: Boolean
+  logo: String
+  website: String
+  config: [KeyValuePair]
+}
+
+input AssetCustomizationProviderInput {
+  isEnabled: Boolean!
+  key: String!
+  config: [KeyValuePairInput]
+}
+
+type AssetPaths {
+  siteLogo: String
+  appleTouchIcon: String
+  androidChrome192: String
+  androidChrome256: String
+  favicon32: String
+  favicon16: String
+  safariPinnedTab: String
+  mstile150: String
+  faviconIco: String
+  loginBackground: String
+  ogImage: String
+}
+
+type AssetCustomizationUpdateResponse {
+  responseResult: ResponseStatus
+  assets: AssetPaths
+}
