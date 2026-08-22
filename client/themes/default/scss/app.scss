@@ -320,6 +320,9 @@
     [lang='fa'],
     [dir='rtl'] {
       line-height: 1.8;
+      direction: rtl;
+      unicode-bidi: isolate;
+      display: inline;
     }
 
     &.valign-center > p {
