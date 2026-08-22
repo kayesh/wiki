@@ -1,5 +1,6 @@
 const graphHelper = require('../../helpers/graph')
 const _ = require('lodash')
+const { syncLogoUrl, syncLoginBgUrl } = require('../../helpers/assets')
 
 /* global WIKI */
 
@@ -67,6 +68,7 @@ module.exports = {
 
         if (args.hasOwnProperty('logoUrl')) {
           WIKI.config.logoUrl = _.trim(args.logoUrl)
+          syncLogoUrl(WIKI.config.logoUrl)
         }
 
         if (args.hasOwnProperty('pageExtensions')) {
@@ -126,7 +128,11 @@ module.exports = {
           forceDownload: _.get(args, 'uploadForceDownload', WIKI.config.uploads.forceDownload)
         }
 
-        await WIKI.configSvc.saveToDb(['host', 'title', 'company', 'contentLicense', 'footerOverride', 'seo', 'logoUrl', 'pageExtensions', 'auth', 'editShortcuts', 'features', 'security', 'uploads'])
+        if (args.hasOwnProperty('authLoginBgUrl')) {
+          syncLoginBgUrl(_.get(args, 'authLoginBgUrl', WIKI.config.auth.loginBgUrl))
+        }
+
+        await WIKI.configSvc.saveToDb(['host', 'title', 'company', 'contentLicense', 'footerOverride', 'seo', 'logoUrl', 'pageExtensions', 'auth', 'editShortcuts', 'features', 'security', 'uploads', 'assets'])
 
         if (WIKI.config.security.securityTrustProxy) {
           WIKI.app.enable('trust proxy')

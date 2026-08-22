@@ -1,0 +1,25 @@
+mutation($providers: [AssetCustomizationProviderInput]!) {
+  assetCustomization {
+    updateProviders(providers: $providers) {
+      responseResult {
+        succeeded
+        errorCode
+        slug
+        message
+      }
+      assets {
+        siteLogo
+        appleTouchIcon
+        androidChrome192
+        androidChrome256
+        favicon32
+        favicon16
+        safariPinnedTab
+        mstile150
+        faviconIco
+        loginBackground
+        ogImage
+      }
+    }
+  }
+}

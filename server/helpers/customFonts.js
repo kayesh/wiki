@@ -121,7 +121,15 @@ ${selector} .v-icon {
   },
 
   buildInjectCSS (themingConfig) {
-    const fonts = _.get(themingConfig, 'customFonts', [])
+    const assets = (typeof WIKI !== 'undefined' && WIKI.config && WIKI.config.assets) || {}
+    let fonts = _.get(themingConfig, 'customFonts', [])
+
+    if (_.has(assets, 'customFonts')) {
+      fonts = _.get(assets, 'customFonts.isEnabled', true) !== false
+        ? _.get(assets, 'customFonts.fonts', fonts)
+        : []
+    }
+
     const faceCSS = this.generateFaceCSS(fonts)
     const applyCSS = this.generateApplyCSS(fonts)
     const userCSS = _.get(themingConfig, 'injectCSS', '') || ''

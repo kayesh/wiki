@@ -239,6 +239,7 @@ import listFolderAssetQuery from 'gql/editor/editor-media-query-folder-list.gql'
 import createAssetFolderMutation from 'gql/editor/editor-media-mutation-folder-create.gql'
 import renameAssetMutation from 'gql/editor/editor-media-mutation-asset-rename.gql'
 import deleteAssetMutation from 'gql/editor/editor-media-mutation-asset-delete.gql'
+import { buildMediaAssetPath, resetMediaBrowserState } from '../../helpers/asset-path'
 
 const FilePond = vueFilePond()
 const localeSegmentRegex = /^[A-Z]{2}(-[A-Z]{2})?$/i
@@ -327,6 +328,11 @@ export default {
     }
   },
   watch: {
+    activeModal (val, oldVal) {
+      if (val === 'editorModalMedia' && oldVal !== 'editorModalMedia') {
+        resetMediaBrowserState(this.$store)
+      }
+    },
     newFolderDialog(newValue, oldValue) {
       if (newValue) {
         this.$nextTick(() => {
@@ -370,10 +376,12 @@ export default {
     },
     insert () {
       const asset = _.find(this.assets, ['id', this.currentFileId])
-      const assetPath = this.folderTree.map(f => f.slug).join('/')
+      if (!asset) {
+        return
+      }
       this.$root.$emit('editorInsert', {
         kind: asset.kind,
-        path: this.currentFolderId > 0 ? `/${assetPath}/${asset.filename}` : `/${asset.filename}`,
+        path: buildMediaAssetPath(this.folderTree, asset.filename, this.currentFolderId),
         text: asset.filename,
         align: this.imageAlignment
       })

@@ -1,6 +1,7 @@
 /* global WIKI */
 
 const { getPwaAppName, PWA_APP_NAME } = require('./siteDisplayName')
+const { getResolvedAssets } = require('./assets')
 
 const PWA_THEME_COLOR = '#1976d2'
 const PWA_DEFAULT_APP_NAME = PWA_APP_NAME
@@ -34,12 +35,12 @@ function getWebAppManifest () {
     dir: 'ltr',
     icons: [
       {
-        src: '/_assets/favicons/android-chrome-192x192.png',
+        src: getResolvedAssets().androidChrome192,
         sizes: '192x192',
         type: 'image/png'
       },
       {
-        src: '/_assets/favicons/android-chrome-256x256.png',
+        src: getResolvedAssets().androidChrome256,
         sizes: '256x256',
         type: 'image/png'
       }

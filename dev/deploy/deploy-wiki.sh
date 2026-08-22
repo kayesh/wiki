@@ -6,6 +6,7 @@
 #
 # Environment overrides:
 #   COMPOSE_DIR=/root  REGISTRY=ghcr.io/kayesh/wiki
+#   SKIP_PRUNE=1                  # skip unused-image cleanup before pull
 
 set -euo pipefail
 
@@ -67,6 +68,39 @@ read_current_image() {
 
 compose_cmd() {
   docker-compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" "$@"
+}
+
+# Remove dangling layers and old wiki tags so the next pull has disk room.
+# Keeps the running/previous image and the target tag (for rollback).
+prune_unused_wiki_images() {
+  local running_id="" repo_tag img_id tag
+
+  log "Pruning unused wiki images..."
+  log "Disk before prune: $(df -h / | awk 'NR==2 {print $3 " used, " $4 " free (" $5 ")"}')"
+
+  if docker inspect wiki >/dev/null 2>&1; then
+    running_id="$(docker inspect wiki --format '{{.Image}}')"
+  fi
+
+  docker image prune -f >/dev/null || true
+
+  while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    repo_tag="$(echo "$line" | awk '{print $1":"$2}')"
+    img_id="$(echo "$line" | awk '{print $3}')"
+    tag="$(echo "$line" | awk '{print $2}')"
+
+    [[ "$tag" == "<none>" ]] && continue
+    [[ "$repo_tag" == "$FULL_IMAGE" ]] && continue
+    [[ -n "${PREVIOUS_IMAGE:-}" && "$repo_tag" == "$PREVIOUS_IMAGE" ]] && continue
+    [[ -n "$running_id" && "$running_id" == *"$img_id"* ]] && continue
+
+    log "Removing ${repo_tag}"
+    docker rmi "$repo_tag" 2>/dev/null || true
+  done < <(docker images "$REGISTRY" --format '{{.Repository}} {{.Tag}} {{.ID}}')
+
+  docker image prune -f >/dev/null || true
+  log "Disk after prune:  $(df -h / | awk 'NR==2 {print $3 " used, " $4 " free (" $5 ")"}')"
 }
 
 write_state() {
@@ -141,6 +175,10 @@ fi
 
 echo "WIKI_IMAGE=${FULL_IMAGE}" > "$ENV_FILE"
 
+if [[ "${SKIP_PRUNE:-}" != "1" ]]; then
+  prune_unused_wiki_images
+fi
+
 log "Pulling ${FULL_IMAGE}..."
 docker pull "$FULL_IMAGE"
 
@@ -158,6 +196,11 @@ done
 
 run_health_checks
 write_state
+
+if [[ "${SKIP_PRUNE:-}" != "1" ]]; then
+  docker image prune -f >/dev/null || true
+fi
+
 write_report
 
 log "Deployment complete."

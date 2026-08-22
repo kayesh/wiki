@@ -42,7 +42,7 @@ html(lang=siteConfig.lang)
         color: rgba(255, 255, 255, 0.38) !important;
       }
     meta(name='msapplication-TileColor', content='#1976d2')
-    meta(name='msapplication-TileImage', content='/_assets/favicons/mstile-150x150.png')
+    meta(name='msapplication-TileImage', content=(siteConfig.assets && siteConfig.assets.mstile150) || '/_assets/favicons/mstile-150x150.png')
 
     title= pageMeta.title + ' | ' + siteConfig.title
 
@@ -56,11 +56,12 @@ html(lang=siteConfig.lang)
     meta(property='og:site_name', content=siteConfig.title)
 
     //- Favicon
-    link(rel='apple-touch-icon', sizes='180x180', href='/_assets/favicons/apple-touch-icon.png')
-    link(rel='icon', type='image/png', sizes='192x192', href='/_assets/favicons/android-chrome-192x192.png')
-    link(rel='icon', type='image/png', sizes='32x32', href='/_assets/favicons/favicon-32x32.png')
-    link(rel='icon', type='image/png', sizes='16x16', href='/_assets/favicons/favicon-16x16.png')
-    link(rel='mask-icon', href='/_assets/favicons/safari-pinned-tab.svg', color='#1976d2')
+    link(rel='apple-touch-icon', sizes='180x180', href=(siteConfig.assets && siteConfig.assets.appleTouchIcon) || '/_assets/favicons/apple-touch-icon.png')
+    link(rel='icon', type='image/png', sizes='192x192', href=(siteConfig.assets && siteConfig.assets.androidChrome192) || '/_assets/favicons/android-chrome-192x192.png')
+    link(rel='icon', type='image/png', sizes='32x32', href=(siteConfig.assets && siteConfig.assets.favicon32) || '/_assets/favicons/favicon-32x32.png')
+    link(rel='icon', type='image/png', sizes='16x16', href=(siteConfig.assets && siteConfig.assets.favicon16) || '/_assets/favicons/favicon-16x16.png')
+    link(rel='mask-icon', href=(siteConfig.assets && siteConfig.assets.safariPinnedTab) || '/_assets/favicons/safari-pinned-tab.svg', color='#1976d2')
+    link(rel='shortcut icon', href=(siteConfig.assets && siteConfig.assets.faviconIco) || '/_assets/favicon.ico')
     link(rel='manifest', href='/manifest.webmanifest')
 
     //- Site Properties

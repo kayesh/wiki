@@ -55,6 +55,7 @@ module.exports = async () => {
   app.use(favicon(path.join(WIKI.ROOTPATH, 'assets', 'favicon.ico')))
 
   const pwa = require('./helpers/pwa')
+  const { getResolvedAssets, resolvePublicAssetUrl } = require('./helpers/assets')
   const { getSiteDisplayName, getPwaAppName } = require('./helpers/siteDisplayName')
   app.get('/install', (req, res) => {
     res.redirect('/?install=1')
@@ -156,6 +157,7 @@ module.exports = async () => {
 
   app.use(async (req, res, next) => {
     const facebookStrategy = _.find(_.values(WIKI.auth.strategies), ['strategyKey', 'facebook'])
+    const assets = getResolvedAssets()
     res.locals.siteConfig = {
       title: getSiteDisplayName(),
       pwaAppName: getPwaAppName(),
@@ -167,9 +169,14 @@ module.exports = async () => {
       company: WIKI.config.company,
       contentLicense: WIKI.config.contentLicense,
       footerOverride: WIKI.config.footerOverride,
-      logoUrl: WIKI.config.logoUrl,
+      logoUrl: assets.siteLogo,
+      loginBgUrl: assets.loginBackground,
+      assets,
       facebookAppId: facebookStrategy?.config?.clientId || '',
       mobileHeaderChatEnabled: false
+    }
+    if (assets.ogImage) {
+      _.set(res.locals, 'pageMeta.image', resolvePublicAssetUrl(assets.ogImage, WIKI.config.host))
     }
     res.locals.langs = await WIKI.models.locales.getNavLocales({ cache: true })
     res.locals.analyticsCode = await WIKI.models.analytics.getCode({ cache: true })

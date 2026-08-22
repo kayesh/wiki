@@ -9,6 +9,9 @@
       v-list-item(to='/general', color='primary', v-if='hasPermission(`manage:system`)', @click='onNavigate')
         v-list-item-avatar(size='24', tile): v-icon mdi-widgets
         v-list-item-title {{ $t('admin:general.title') }}
+      v-list-item(to='/asset-customization', color='primary', v-if='hasPermission(`manage:system`)', @click='onNavigate')
+        v-list-item-avatar(size='24', tile): v-icon mdi-image-edit-outline
+        v-list-item-title Asset Customization
       v-list-item(to='/locale', color='primary', v-if='hasPermission(`manage:system`)', @click='onNavigate')
         v-list-item-avatar(size='24', tile): v-icon mdi-web
         v-list-item-title {{ $t('admin:locale.title') }}
