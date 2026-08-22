@@ -102,31 +102,33 @@
               v-card.animated.fadeInUp.wait-p4s
                 v-toolbar(color='teal', dark, dense, flat)
                   v-toolbar-title.subtitle-1 {{ $t('admin:locale.downloadTitle') }}
-                v-data-table(
-                  :headers='headers',
-                  :items='locales',
-                  hide-default-footer,
-                  item-key='code',
-                  :items-per-page='1000'
-                  )
-                  template(v-slot:item.code='{ item }')
-                    v-chip.white--text(label, color='teal', small) {{item.code}}
-                  template(v-slot:item.name='{ item }')
-                    strong {{item.name}}
-                  template(v-slot:item.isRTL='{ item }')
-                    v-icon(v-if='item.isRTL') mdi-check
-                  template(v-slot:item.availability='{ item }')
-                    .d-flex.align-center.pl-4
-                      v-progress-circular(:value='item.availability', width='2', size='20', :color='item.availability <= 33 ? `red` : (item.availability <= 66) ? `orange` : `green`')
-                      .caption.mx-2(:class='item.availability <= 33 ? `red--text` : (item.availability <= 66) ? `orange--text` : `green--text`') {{item.availability}}%
-                  template(v-slot:item.isInstalled='{ item }')
-                    v-progress-circular(v-if='item.isDownloading', indeterminate, color='blue', size='20', :width='2')
-                    v-btn(v-else-if='item.isInstalled && item.installDate < item.updatedAt', icon, small, @click='download(item)')
-                      v-icon.blue--text mdi-cached
-                    v-btn(v-else-if='item.isInstalled', icon, small, @click='download(item)')
-                      v-icon.green--text mdi-check-bold
-                    v-btn(v-else, icon, small, @click='download(item)')
-                      v-icon.grey--text mdi-cloud-download
+                .admin-locale-table-wrap
+                  v-data-table.admin-locale-table(
+                    :headers='headers',
+                    :items='locales',
+                    hide-default-footer,
+                    item-key='code',
+                    :items-per-page='1000',
+                    :mobile-breakpoint='0'
+                    )
+                    template(v-slot:item.code='{ item }')
+                      v-chip.white--text(label, color='teal', small) {{item.code}}
+                    template(v-slot:item.name='{ item }')
+                      strong {{item.name}}
+                    template(v-slot:item.isRTL='{ item }')
+                      v-icon(v-if='item.isRTL') mdi-check
+                    template(v-slot:item.availability='{ item }')
+                      .d-flex.align-center.pl-4
+                        v-progress-circular(:value='item.availability', width='2', size='20', :color='item.availability <= 33 ? `red` : (item.availability <= 66) ? `orange` : `green`')
+                        .caption.mx-2(:class='item.availability <= 33 ? `red--text` : (item.availability <= 66) ? `orange--text` : `green--text`') {{item.availability}}%
+                    template(v-slot:item.isInstalled='{ item }')
+                      v-progress-circular(v-if='item.isDownloading', indeterminate, color='blue', size='20', :width='2')
+                      v-btn(v-else-if='item.isInstalled && item.installDate < item.updatedAt', icon, small, @click='download(item)')
+                        v-icon.blue--text mdi-cached
+                      v-btn(v-else-if='item.isInstalled', icon, small, @click='download(item)')
+                        v-icon.green--text mdi-check-bold
+                      v-btn(v-else, icon, small, @click='download(item)')
+                        v-icon.grey--text mdi-cloud-download
               v-card.wiki-form.mt-3.animated.fadeInUp.wait-p5s
                 v-toolbar(color='teal', dark, dense, flat)
                   v-toolbar-title.subtitle-1 {{ $t('admin:locale.sideload') }}
@@ -300,3 +302,24 @@ export default {
   }
 }
 </script>
+
+<style lang='scss'>
+.admin-locale-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  width: 100%;
+}
+
+.admin-locale-table {
+  min-width: 640px;
+
+  .v-data-table__wrapper {
+    overflow-x: visible;
+  }
+
+  thead th {
+    white-space: nowrap;
+  }
+}
+</style>
