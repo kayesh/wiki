@@ -84,6 +84,7 @@ ${selector} .v-icon {
 }`
   const applyRules = [
     applyRule('.v-main :is(.contents, .page-header-block, .page-col-sd, #arrow-boxes, .related-posts)'),
+    applyRule('.v-application.admin .v-main'),
     applyRule('.v-application .v-navigation-drawer .__vuescroll'),
     applyRule('.v-application .nav-header .nav-header__site-title'),
     applyRule('.v-application .nav-header .v-toolbar__title')

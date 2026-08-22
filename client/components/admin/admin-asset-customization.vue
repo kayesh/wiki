@@ -19,7 +19,7 @@
           v-toolbar(flat, color='primary', dark, dense)
             .subtitle-1 Module
           v-list(two-line, dense).py-0
-            template(v-for='(item, idx) in providers')
+            template(v-for='(item, idx) in sortedProviders')
               v-list-item(:key='item.key', @click='selectedProvider = item.key', :disabled='!item.isAvailable')
                 v-list-item-avatar(size='24')
                   v-icon(color='grey', v-if='!item.isAvailable') mdi-minus-box-outline
@@ -30,7 +30,7 @@
                   v-list-item-subtitle: .caption(:class='!item.isAvailable ? `grey--text text--lighten-1` : (selectedProvider === item.key ? `blue--text ` : ``)') {{ item.description }}
                 v-list-item-avatar(v-if='selectedProvider === item.key', size='24')
                   v-icon.animated.fadeInLeft(color='primary', large) mdi-chevron-right
-              v-divider(v-if='idx < providers.length - 1')
+              v-divider(v-if='idx < sortedProviders.length - 1')
 
       v-flex.asset-customization-panel(xs12, lg9)
         v-card.asset-customization-panel__card.animated.fadeInUp.wait-p2s
@@ -58,16 +58,18 @@
               template(v-if='provider.key === "customFonts"')
                 .px-4.pb-4
                   .caption.grey--text.mb-3 Upload font files (.ttf, .otf, .woff, .woff2). @font-face rules are generated automatically and injected on every page.
-                  v-data-table(
-                    :headers='fontHeaders'
-                    :items='customFontsList'
-                    hide-default-footer
-                    :items-per-page='100'
-                    no-data-text='No custom fonts uploaded yet.'
-                    )
-                    template(v-slot:item.actions='{ item }')
-                      v-btn(icon, small, @click='removeFont(item)')
-                        v-icon.red--text mdi-delete
+                  .asset-customization-fonts-table-wrap
+                    v-data-table.asset-customization-fonts-table(
+                      :headers='fontHeaders'
+                      :items='customFontsList'
+                      hide-default-footer
+                      :items-per-page='100'
+                      :mobile-breakpoint='0'
+                      no-data-text='No custom fonts uploaded yet.'
+                      )
+                      template(v-slot:item.actions='{ item }')
+                        v-btn(icon, small, @click='removeFont(item)')
+                          v-icon.red--text mdi-delete
                   v-btn.mt-3(color='primary', depressed, @click='openFontDialog')
                     v-icon(left) mdi-upload
                     span Add Font
@@ -201,6 +203,18 @@ import editorStore from '../../store/editor'
 import providersQuery from 'gql/admin/asset-customization/asset-customization-query-providers.gql'
 import providersSaveMutation from 'gql/admin/asset-customization/asset-customization-mutation-save-providers.gql'
 
+const PROVIDER_ORDER = {
+  logo: 0,
+  favicons: 1,
+  backgrounds: 2,
+  openGraph: 3,
+  customFonts: 4
+}
+
+function sortProviders (providers) {
+  return [...(providers || [])].sort((a, b) => (PROVIDER_ORDER[a.key] ?? 100) - (PROVIDER_ORDER[b.key] ?? 100))
+}
+
 /* global WIKI */
 
 WIKI.$store.registerModule('editor', editorStore)
@@ -233,6 +247,9 @@ export default {
   },
   computed: {
     activeModal: sync('editor/activeModal'),
+    sortedProviders () {
+      return sortProviders(this.providers)
+    },
     customFontsConfig () {
       if (this.provider.key !== 'customFonts') {
         return null
@@ -424,16 +441,13 @@ export default {
     providers: {
       query: providersQuery,
       fetchPolicy: 'network-only',
-      update: (data) => _.cloneDeep(data.assetCustomization.providers).map(str => ({
+      update: (data) => sortProviders(_.cloneDeep(data.assetCustomization.providers).map(str => ({
         ...str,
         config: _.sortBy(str.config.map(cfg => ({
           ...cfg,
           value: parseConfigValue(cfg.value)
         })), [t => t.value.order, t => t.key])
-      })).sort((a, b) => {
-        const order = { logo: 0, favicons: 1, backgrounds: 2, openGraph: 3, customFonts: 4 }
-        return (order[a.key] || 100) - (order[b.key] || 100)
-      }),
+      }))),
       watchLoading (isLoading) {
         this.$store.commit(`loading${isLoading ? 'Start' : 'Stop'}`, 'admin-asset-customization-refresh')
       }
@@ -478,5 +492,24 @@ export default {
   font-size: 13px;
   font-weight: 600;
   line-height: 1.4;
+}
+
+.asset-customization-fonts-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  width: 100%;
+}
+
+.asset-customization-fonts-table {
+  min-width: 640px;
+
+  .v-data-table__wrapper {
+    overflow-x: visible;
+  }
+
+  thead th {
+    white-space: nowrap;
+  }
 }
 </style>

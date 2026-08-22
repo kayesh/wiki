@@ -11,7 +11,10 @@
         v-list-item-title {{ $t('admin:general.title') }}
       v-list-item(to='/asset-customization', color='primary', v-if='hasPermission(`manage:system`)', @click='onNavigate')
         v-list-item-avatar(size='24', tile): v-icon mdi-image-edit-outline
-        v-list-item-title Asset Customization
+        v-list-item-title এসেট কাস্টমাইজেশন
+      v-list-item(to='/page-customization', color='primary', v-if='hasPermission(`manage:system`)', @click='onNavigate')
+        v-list-item-avatar(size='24', tile): v-icon mdi-tune
+        v-list-item-title পেইজ কাস্টমাইজেশন
       v-list-item(to='/locale', color='primary', v-if='hasPermission(`manage:system`)', @click='onNavigate')
         v-list-item-avatar(size='24', tile): v-icon mdi-web
         v-list-item-title {{ $t('admin:locale.title') }}
@@ -60,9 +63,6 @@
       v-list-item(to='/comments', @click='onNavigate')
         v-list-item-avatar(size='24', tile): v-icon mdi-comment-text-outline
         v-list-item-title {{ $t('admin:comments.title') }}
-      v-list-item(to='/page-customization', color='primary', @click='onNavigate')
-        v-list-item-avatar(size='24', tile): v-icon mdi-tune
-        v-list-item-title Page Customization
       v-list-item(to='/rendering', color='primary', @click='onNavigate')
         v-list-item-avatar(size='24', tile): v-icon mdi-cogs
         v-list-item-title {{ $t('admin:rendering.title') }}

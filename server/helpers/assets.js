@@ -28,6 +28,14 @@ const DEFAULT_ASSETS = {
   }
 }
 
+const MODULE_ORDER = {
+  logo: 0,
+  favicons: 1,
+  backgrounds: 2,
+  openGraph: 3,
+  customFonts: 4
+}
+
 const MODULE_DEFS = [
   {
     key: 'logo',
@@ -265,7 +273,7 @@ function getResolvedAssets () {
 
 function getProviders () {
   const stored = getStoredAssets()
-  return MODULE_DEFS.map(def => ({
+  return _.sortBy(MODULE_DEFS.map(def => ({
     key: def.key,
     title: def.title,
     description: def.description,
@@ -287,7 +295,7 @@ function getProviders () {
         return 100
       }
     })
-  }))
+  })), provider => MODULE_ORDER[provider.key] ?? 100)
 }
 
 function applyProviders (providers) {
@@ -348,6 +356,7 @@ function syncLoginBgUrl (loginBgUrl) {
 module.exports = {
   DEFAULT_ASSETS,
   MODULE_DEFS,
+  MODULE_ORDER,
   getStoredAssets,
   getResolvedAssets,
   getProviders,

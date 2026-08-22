@@ -53,6 +53,18 @@ describe('helpers/assets', () => {
     expect(loginCfg.value).toBe('/uploads/login.jpg')
   })
 
+  it('returns providers with logo first', () => {
+    const providers = getProviders()
+
+    expect(providers.map(p => p.key)).toEqual([
+      'logo',
+      'favicons',
+      'backgrounds',
+      'openGraph',
+      'customFonts'
+    ])
+  })
+
   it('applies new paths immediately to resolved assets and synced config', () => {
     applyProviders([
       {

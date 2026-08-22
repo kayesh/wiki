@@ -41,27 +41,6 @@
                       persistent-hint
                       )
                   v-divider
-                  .overline.grey--text.pa-4 {{$t('admin:general.logo')}}
-                  .pt-2.pb-7.pl-10.pr-3
-                    .d-flex.align-center
-                      v-avatar(size='100', tile)
-                        v-img(
-                          :src='config.logoUrl'
-                          lazy-src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNcWQ8AAdcBKrJda2oAAAAASUVORK5CYII='
-                          aspect-ratio='1'
-                          )
-                      .ml-4(style='flex: 1 1 auto;')
-                        v-text-field(
-                          outlined
-                          :label='$t(`admin:general.logoUrl`)'
-                          v-model='config.logoUrl'
-                          :hint='$t(`admin:general.logoUrlHint`)'
-                          persistent-hint
-                          append-icon='mdi-folder-image'
-                          @click:append='browseLogo'
-                          @keyup.enter='refreshLogo'
-                        )
-                  v-divider
                   .overline.grey--text.pa-4 {{$t('admin:general.footerCopyright')}}
                   .px-3.pb-3
                     v-text-field(
@@ -266,8 +245,6 @@
                       persistent-hint
                       )
 
-    component(:is='activeModal')
-
 </template>
 
 <script>
@@ -275,19 +252,11 @@ import _ from 'lodash'
 import { sync } from 'vuex-pathify'
 import gql from 'graphql-tag'
 
-import editorStore from '../../store/editor'
-
 /* global WIKI */
 
 const titleRegex = /[<>"]/i
 
-WIKI.$store.registerModule('editor', editorStore)
-
 export default {
-  i18nOptions: { namespaces: 'editor' },
-  components: {
-    editorModalMedia: () => import(/* webpackChunkName: "editor", webpackMode: "lazy" */ '../editor/editor-modal-media.vue')
-  },
   data() {
     return {
       config: {
@@ -300,7 +269,6 @@ export default {
         company: '',
         contentLicense: '',
         footerOverride: '',
-        logoUrl: '',
         featureAnalytics: false,
         featurePageRatings: false,
         featurePageComments: false,
@@ -326,11 +294,9 @@ export default {
   },
   computed: {
     siteTitle: sync('site/title'),
-    logoUrl: sync('site/logoUrl'),
     company: sync('site/company'),
     contentLicense: sync('site/contentLicense'),
     footerOverride: sync('site/footerOverride'),
-    activeModal: sync('editor/activeModal'),
     contentLicenses () {
       return [
         { value: '', text: this.$t('common:license.none') },
@@ -369,7 +335,6 @@ export default {
               $company: String
               $contentLicense: String
               $footerOverride: String
-              $logoUrl: String
               $pageExtensions: String
               $featurePageRatings: Boolean
               $featurePageComments: Boolean
@@ -394,7 +359,6 @@ export default {
                   company: $company
                   contentLicense: $contentLicense
                   footerOverride: $footerOverride
-                  logoUrl: $logoUrl
                   pageExtensions: $pageExtensions
                   featurePageRatings: $featurePageRatings
                   featurePageComments: $featurePageComments
@@ -428,7 +392,6 @@ export default {
             company: _.get(this.config, 'company', ''),
             contentLicense: _.get(this.config, 'contentLicense', ''),
             footerOverride: _.get(this.config, 'footerOverride', ''),
-            logoUrl: _.get(this.config, 'logoUrl', ''),
             pageExtensions: _.get(this.config, 'pageExtensions', ''),
             featurePageRatings: _.get(this.config, 'featurePageRatings', false),
             featurePageComments: _.get(this.config, 'featurePageComments', false),
@@ -455,26 +418,10 @@ export default {
         this.company = this.config.company
         this.contentLicense = this.config.contentLicense
         this.footerOverride = this.config.footerOverride
-        this.logoUrl = this.config.logoUrl
       } catch (err) {
         this.$store.commit('pushGraphError', err)
       }
-    },
-    browseLogo () {
-      this.$store.set('editor/editorKey', 'common')
-      this.activeModal = 'editorModalMedia'
-    },
-    refreshLogo () {
-      this.$forceUpdate()
     }
-  },
-  mounted () {
-    this.$root.$on('editorInsert', opts => {
-      this.config.logoUrl = opts.path
-    })
-  },
-  beforeDestroy() {
-    this.$root.$off('editorInsert')
   },
   apollo: {
     config: {
@@ -491,7 +438,6 @@ export default {
               company
               contentLicense
               footerOverride
-              logoUrl
               pageExtensions
               featurePageRatings
               featurePageComments

@@ -1023,6 +1023,10 @@ $page-header-title-line-height-stuck: 1.25rem;
 }
 
 @media #{map-get($display-breakpoints, 'sm-and-down')} {
+  .v-main .container.pl-5 {
+    padding-top: 0 !important;
+  }
+
   .page-header-block--mobile {
     position: sticky;
     top: 0;
@@ -1035,6 +1039,8 @@ $page-header-title-line-height-stuck: 1.25rem;
     transition: box-shadow $page-header-stuck-transition;
 
     .page-header-section.is-page-header-title {
+      min-height: 48px;
+      padding: 8px 12px;
       transition: min-height $page-header-stuck-transition, padding $page-header-stuck-transition;
     }
 
