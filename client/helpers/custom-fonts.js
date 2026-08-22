@@ -25,7 +25,7 @@ export function parseConfigValue (rawValue) {
 
 export function getConfigFieldValue (cfg) {
   if (!cfg || !cfg.value) {
-    return Array.isArray(cfg?.value) ? cfg.value : ''
+    return (cfg && Array.isArray(cfg.value)) ? cfg.value : ''
   }
 
   if (Object.prototype.hasOwnProperty.call(cfg.value, 'value')) {
