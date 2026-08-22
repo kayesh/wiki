@@ -295,9 +295,7 @@
     border-right: 5px solid #607d8b;
     border-radius: .5rem;
     margin: 1rem 0;
-    // Wrapped Arabic lines need a taller line box; Bengali tightness is handled
-    // via line-gap-override on the Bengali @font-face in custom-fonts.js.
-    line-height: 1.8;
+    line-height: inherit;
     position: relative;
 
     @at-root .theme--dark & {
@@ -312,6 +310,16 @@
 
     > p:first-child .emoji {
       margin-right: .5rem;
+    }
+
+    // Keep Bengali compact by default, and expand Arabic script text when
+    // the content is language-marked.
+    :lang(ar),
+    :lang(fa),
+    [lang='ar'],
+    [lang='fa'],
+    [dir='rtl'] {
+      line-height: 1.8;
     }
 
     &.valign-center > p {
