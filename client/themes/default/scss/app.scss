@@ -295,6 +295,8 @@
     border-right: 5px solid #607d8b;
     border-radius: .5rem;
     margin: 1rem 0;
+    // Wrapped Arabic lines need a taller line box; Bengali tightness is handled
+    // via line-gap-override on the Bengali @font-face in custom-fonts.js.
     line-height: 1.8;
     position: relative;
 
